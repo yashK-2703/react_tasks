@@ -1,4 +1,4 @@
-import React, { Component, useState } from "react";
+import React, { Component } from "react";
 
 class TodoApp extends Component {
   constructor(props) {
@@ -69,43 +69,43 @@ class TodoApp extends Component {
   render() {
     return (
       <div>
-        <form onSubmit={this.handleSubmit} style = {{ paddingBottom: "20px" }}>
+        <form onSubmit={this.handleSubmit} style={{ paddingBottom: "20px" }}>
           <input
             type="text"
-            value = {this.state.currentTodo}
-            onChange = {this.handleChange}
-            placeholder = "Enter a new todo"
+            value={this.state.currentTodo}
+            onChange={this.handleChange}
+            placeholder="Enter a new todo"
           />
           <select
             id="priority"
-            value = {this.state.priority}
-            onChange = {this.handlePriorityChange}
+            value={this.state.priority}
+            onChange={this.handlePriorityChange}
           >
-            <option value = "normal">Normal</option>
-            <option value = "high">High</option>
-            <option value = "low">Low</option>
+            <option value="normal">Normal</option>
+            <option value="high">High</option>
+            <option value="low">Low</option>
           </select>
-          <button type = "submit">Add Todo</button>
+          <button type="submit">Add Todo</button>
         </form>
 
         <form>
           <input
-            type = "text"
-            value = {this.state.searchTerm}
-            onChange = {this.handleSearchChange}
-            placeholder = "Search Todo"
+            type="text"
+            value={this.state.searchTerm}
+            onChange={this.handleSearchChange}
+            placeholder="Search Todo"
           />
-          <button onClick = {this.handleSearch}>Search</button>
+          <button onClick={this.handleSearch}>Search</button>
         </form>
         {this.state.isSearchEnabled ? (
           <ul>
             {this.state.filteredTodos.map((todo) => (
               <li
-                key = {todo.id}
-                style = {{ color: this.handleColor(todo.priority) }}
+                key={todo.id}
+                style={{ color: this.handleColor(todo.priority) }}
               >
                 {todo.text}
-                <button onClick = {() => this.removeTodo(todo.id)}>Remove</button>
+                <button onClick={() => this.removeTodo(todo.id)}>Remove</button>
               </li>
             ))}
           </ul>
@@ -113,11 +113,11 @@ class TodoApp extends Component {
           <ul>
             {this.state.todos.map((todo) => (
               <li
-                key = {todo.id}
-                style = {{ color: this.handleColor(todo.priority) }}
+                key={todo.id}
+                style={{ color: this.handleColor(todo.priority) }}
               >
                 {todo.text}
-                <button onClick = {() => this.removeTodo(todo.id)}>Remove</button>
+                <button onClick={() => this.removeTodo(todo.id)}>Remove</button>
               </li>
             ))}
           </ul>
