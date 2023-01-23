@@ -13,7 +13,6 @@ class TodoApp extends Component {
     this.removeTodo = this.removeTodo.bind(this);
     this.handlePriorityChange = this.handlePriorityChange.bind(this);
     this.handleColor = this.handleColor.bind(this);
-
   }
 
   handleChange(e) {
