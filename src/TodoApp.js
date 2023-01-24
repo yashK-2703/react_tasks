@@ -60,9 +60,11 @@ class TodoApp extends Component {
 	}
 
 	removeTodo(id) {
+		const updatedTodos = this.state.todos.filter((todo) => todo.id !== id);
+		console.log(updatedTodos);
 		this.setState({
-			todos: this.state.todos.filter((todo) => todo.id !== id),
-			filteredTodos: this.state.todos,
+			todos: updatedTodos,
+			filteredTodos: updatedTodos.filter((todo) => todo.text.includes(this.state.searchTerm))
 		});
 	}
 
