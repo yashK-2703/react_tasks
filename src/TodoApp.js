@@ -1,147 +1,110 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 
-class TodoApp extends Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			todos: [],
-			currentTodo: "",
-			priority: "normal",
-			searchTerm: "",
-			filteredTodos: [],
-			isSearchEnabled: false,
-		};
-		this.handleChange = this.handleChange.bind(this);
-		this.handleSubmit = this.handleSubmit.bind(this);
-		this.removeTodo = this.removeTodo.bind(this);
-		this.handlePriorityChange = this.handlePriorityChange.bind(this);
-		this.handleColor = this.handleColor.bind(this);
-		this.handleSearchChange = this.handleSearchChange.bind(this);
-		this.handleSearch = this.handleSearch.bind(this);
+function TodoApp() {
+	const [todo, setTodo] = useState([]);
+	const [currentTodo, setCurrentTodo] = useState("");
+	const [priority, setPriority] = useState("normal");
+	const [searchTerm, setSearchTerm] = useState("");
+	const [filteredTodos, setFilteredTodos] = useState([]);
+	const [isSearchEnabled, setIsSearchEnabled] = useState(false);
+
+	function handleChange(e) {
+		setCurrentTodo(e.target.value);
+		setSearchTerm("");
 	}
 
-	handleChange(e) {
-		this.setState({
-			currentTodo: e.target.value,
-			searchTerm: "",
-		});
-	}
-
-	handleSubmit(e) {
+	function handleSubmit(e) {
 		e.preventDefault();
 		const newTodo = {
 			id: Date.now(),
-			text: this.state.currentTodo,
-			priority: this.state.priority,
+			text: currentTodo,
+			priority: priority,
 		};
-		this.setState({
-			todos: [...this.state.todos, newTodo],
-			currentTodo: "",
-			priority: "normal",
-			isSearchEnabled: false,
-		});
+		setTodo([...todo, newTodo]);
+		setCurrentTodo("");
+		setPriority("normal");
+		setIsSearchEnabled(false);
 	}
 
-	handleSearchChange(e) {
-		this.setState({
-			searchTerm: e.target.value,
-		});
+	function handleSearchChange(e) {
+		setSearchTerm(e.target.value);
 	}
 
-	handleSearch(e) {
+	function handleSearch(e) {
 		e.preventDefault();
-		let filteredTodos = this.state.todos.filter((todo) =>
-			todo.text.includes(this.state.searchTerm)
+		let filteredTodos = todo.filter((todo) =>
+			todo.text.includes(searchTerm)
 		);
-		this.setState({
-			filteredTodos: filteredTodos,
-			isSearchEnabled: true,
-		});
+		setFilteredTodos(filteredTodos);
+		setIsSearchEnabled(true);
 	}
 
-	removeTodo(id) {
-		const updatedTodos = this.state.todos.filter((todo) => todo.id !== id);
-		console.log(updatedTodos);
-		this.setState({
-			todos: updatedTodos,
-			filteredTodos: updatedTodos.filter((todo) => todo.text.includes(this.state.searchTerm))
-		});
+	function removeTodo(id) {
+		const updatedTodos = todo.filter((todo) => todo.id !== id);
+		setTodo(updatedTodos);
+		const updatedFilteredTodos = updatedTodos.filter((todo) => todo.text.includes(searchTerm));
+		setFilteredTodos(updatedFilteredTodos);
 	}
 
-	render() {
-		return (
-			<div>
-				<form onSubmit={this.handleSubmit} style={{ paddingBottom: "20px" }}>
-					<input
-						type="text"
-						value={this.state.currentTodo}
-						onChange={this.handleChange}
-						placeholder="Enter a new todo"
-					/>
-					<select
-						id="priority"
-						value={this.state.priority}
-						onChange={this.handlePriorityChange}
-					>
-						<option value="normal">Normal</option>
-						<option value="high">High</option>
-						<option value="low">Low</option>
-					</select>
-					<button type="submit">Add Todo</button>
-				</form>
-
-				<form>
-					<input
-						type="text"
-						value={this.state.searchTerm}
-						onChange={this.handleSearchChange}
-						placeholder="Search Todo"
-					/>
-					<button onClick={this.handleSearch}>Search</button>
-				</form>
-				{this.state.isSearchEnabled ? (
-					<ul>
-						{this.state.filteredTodos.map((todo) => (
-							<li
-								key={todo.id}
-								style={{ color: this.handleColor(todo.priority) }}
-							>
-								{todo.text}
-								<button onClick={() => this.removeTodo(todo.id)}>Remove</button>
-							</li>
-						))}
-					</ul>
-				) : (
-					<ul>
-						{this.state.todos.map((todo) => (
-							<li
-								key={todo.id}
-								style={{ color: this.handleColor(todo.priority) }}
-							>
-								{todo.text}
-								<button onClick={() => this.removeTodo(todo.id)}>Remove</button>
-							</li>
-						))}
-					</ul>
-				)}
-			</div>
-		);
+	function handlePriorityChange(e) {
+		setPriority(e.target.value);
 	}
 
-	handlePriorityChange(event) {
-		this.setState({ priority: event.target.value });
-	}
-
-	handleColor(priority) {
-		switch (priority) {
-			case "high":
-				return "red";
-			case "normal":
-				return "black";
-			case "low":
-				return "green";
+	function handleColor(priority) {
+		if (priority === "high") {
+			return "red";
+		} else if (priority === "normal") {
+			return "black";
+		} else {
+			return "green";
 		}
 	}
-}
 
+	const todosToShow = isSearchEnabled ? filteredTodos : todo;
+
+	return (
+		<div>
+			<form onSubmit={handleSubmit} style={{ paddingBottom: "20px" }}>
+				<input
+					type="text"
+					value={currentTodo}
+					onChange={handleChange}
+					placeholder="Enter a new todo"
+				/>
+				<select
+					id="priority"
+					value={priority}
+					onChange={handlePriorityChange}
+				>
+					<option value="normal">Normal</option>
+					<option value="high">High</option>
+					<option value="low">Low</option>
+				</select>
+				<button type="submit">Add Todo</button>
+			</form>
+
+			<form>
+				<input
+					type="text"
+					value={searchTerm}
+					onChange={handleSearchChange}
+					placeholder="Search Todo"
+				/>
+				<button onClick={handleSearch}>Search</button>
+			</form>
+
+			<ul>
+				{todosToShow.map((todo) => (
+					<li
+						key={todo.id}
+						style={{ color: handleColor(todo.priority) }}
+					>
+						{todo.text}
+						<button onClick={() => removeTodo(todo.id)}>Remove</button>
+					</li>
+				))}
+			</ul>
+		</div>
+	);
+}
 export default TodoApp;
