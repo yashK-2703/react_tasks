@@ -5,8 +5,6 @@ function TodoApp() {
 	const [currentTodo, setCurrentTodo] = useState("");
 	const [priority, setPriority] = useState("normal");
 	const [searchTerm, setSearchTerm] = useState("");
-	const [filteredTodos, setFilteredTodos] = useState([]);
-	const [isSearchEnabled, setIsSearchEnabled] = useState(false);
 
 	function handleChange(e) {
 		setCurrentTodo(e.target.value);
@@ -23,27 +21,15 @@ function TodoApp() {
 		setTodo([...todo, newTodo]);
 		setCurrentTodo("");
 		setPriority("normal");
-		setIsSearchEnabled(false);
 	}
 
 	function handleSearchChange(e) {
 		setSearchTerm(e.target.value);
 	}
 
-	function handleSearch(e) {
-		e.preventDefault();
-		let filteredTodos = todo.filter((todo) =>
-			todo.text.includes(searchTerm)
-		);
-		setFilteredTodos(filteredTodos);
-		setIsSearchEnabled(true);
-	}
-
 	function removeTodo(id) {
 		const updatedTodos = todo.filter((todo) => todo.id !== id);
 		setTodo(updatedTodos);
-		const updatedFilteredTodos = updatedTodos.filter((todo) => todo.text.includes(searchTerm));
-		setFilteredTodos(updatedFilteredTodos);
 	}
 
 	function handlePriorityChange(e) {
@@ -60,8 +46,7 @@ function TodoApp() {
 		}
 	}
 
-	const todosToShow = isSearchEnabled ? filteredTodos : todo;
-
+	const todosToShow = todo.filter((todos) => todos.text.includes(searchTerm));
 	return (
 		<div>
 			<form onSubmit={handleSubmit} style={{ paddingBottom: "20px" }}>
@@ -90,7 +75,6 @@ function TodoApp() {
 					onChange={handleSearchChange}
 					placeholder="Search Todo"
 				/>
-				<button onClick={handleSearch}>Search</button>
 			</form>
 
 			<ul>
@@ -104,7 +88,7 @@ function TodoApp() {
 					</li>
 				))}
 			</ul>
-		</div>
+		</div >
 	);
 }
 export default TodoApp;
